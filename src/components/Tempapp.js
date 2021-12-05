@@ -15,9 +15,8 @@ const Tempapp = () => {
     });
     const [search, setSearch] = useState(""); //112173060a86fb43967cc14bc0b6d40b
 
-    console.log(process.env)
     const fetchApi = React.useCallback(async () => {
-        console.log('enter')
+
         try {
             const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${search}&units=metric&appid=${process.env.REACT_APP_API_KEY}`);
             response.data && setData((prevState) => {
