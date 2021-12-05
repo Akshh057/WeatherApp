@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import "./CSS/style.css";
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
-import WbSunnyIcon from '@material-ui/icons/WbSunny';
-import CloudIcon from '@mui/icons-material/Cloud';
 import axios from 'axios';
 
 const Tempapp = () => {
@@ -49,7 +47,6 @@ const Tempapp = () => {
         )
 
     }
-    console.log(data)
     return (
         <>
             <div className="main__div">
@@ -72,7 +69,7 @@ const Tempapp = () => {
                         <div className="temp__info">
                             <div className="icons">
                                 {/* <WbSunnyIcon /> */}
-                                {<img src={`http://openweathermap.org/img/wn/${data.weather.icon}@2x.png`} />}
+                                {<img src={`http://openweathermap.org/img/wn/${data.weather.icon}@2x.png`} alt="Weather Icon" />}
                             </div>
                             <h1 className="temp__location">
                                 <LocationOnOutlinedIcon /> {data.name}
