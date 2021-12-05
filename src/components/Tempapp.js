@@ -10,26 +10,34 @@ const Tempapp = () => {
         country: {},
         weather: {},
         name: '',
-        fetching: true
+        fetching: true,
+        err: ''
     });
     const [search, setSearch] = useState(""); //112173060a86fb43967cc14bc0b6d40b
 
-    const fetchApi = async () => {
-        const url = `http://api.openweathermap.org/data/2.5/weather?q=${search}&units=metric&appid=112173060a86fb43967cc14bc0b6d40b`
-        const response = await axios.get(url);
-        response.data && setData((prevState) => {
-            return {
-                ...prevState,
-                city: response.data.main,
-                country: response.data.sys,
-                weather: response.data.weather[0],
-                name: response.data.name,
-                fetching: false
-            }
-        })
-
-
-    }
+    const fetchApi = React.useCallback(async () => {
+        console.log('enter')
+        try {
+            const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${search}&units=metric&appid=112173060a86fb43967cc14bc0b6d40b`);
+            response.data && setData((prevState) => {
+                return {
+                    ...prevState,
+                    city: response.data.main,
+                    country: response.data.sys,
+                    weather: response.data.weather[0],
+                    name: response.data.name,
+                    fetching: false
+                }
+            })
+        } catch (Error) {
+            setData((prevState) => {
+                return {
+                    ...prevState,
+                    err: `${Error.response ? `${Error.response.data.message} (${Error.response.data.cod})` : `There is a ${Error.message}`} `
+                }
+            })
+        }
+    }, [search])
     const check = (e) => {
         if (e.target.value.length === 0) {
             setData((prevState) => {
@@ -38,7 +46,8 @@ const Tempapp = () => {
                     city: {},
                     country: {},
                     name: '',
-                    fetching: true
+                    fetching: true,
+                    err: ''
                 }
             })
         }
@@ -47,11 +56,13 @@ const Tempapp = () => {
         )
 
     }
+    console.log(data.err.message)
     return (
         <>
             <div className="main__div">
                 <h1 className="heading">
-                    Weather
+                    Weather App
+                    <span>🌞🌤️ 🌦️</span>
                 </h1>
                 <div className="temp__div">
                     <div className="input__data">
@@ -64,12 +75,14 @@ const Tempapp = () => {
                         </button>
                     </div>
                     {data.fetching === true ? (
-                        <p > Please Enter City Name!</p>
+                        <>
+                            {data.err.length > 0 ? <p style={{ textTransform: 'capitalize' }}>{`Oops! ${data.err}`}</p> : <p > Please Enter City Name !</p>}
+                        </>
                     ) : (
                         <div className="temp__info">
                             <div className="icons">
                                 {/* <WbSunnyIcon /> */}
-                                {<img src={`http://openweathermap.org/img/wn/${data.weather.icon}@2x.png`} alt="Weather Icon" />}
+                                {<img src={`https://openweathermap.org/img/wn/${data.weather.icon}@2x.png`} alt="Weather Icon" />}
                             </div>
                             <h1 className="temp__location">
                                 <LocationOnOutlinedIcon /> {data.name}
